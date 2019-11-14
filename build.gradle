@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+    id "application"
+}
+
+apply plugin : "java"
+ext {
+    javaMainClass = "SendLogs"
+}
+
+application {
+    mainClassName = javaMainClass
+}
+
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'io.logz.log4j2', name: 'logzio-log4j2-appender', version: '1.0.5'
+}
+
+
+
