@@ -1,2 +1,2 @@
 a bootcamp message
-Boot-Bootcamp
+Boot-Bootcam
