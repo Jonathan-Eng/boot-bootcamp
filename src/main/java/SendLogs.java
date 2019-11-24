@@ -5,36 +5,68 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+// import org.apache.logging.log4j.core.jmx.Server;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.servlet.ServletContainer;
 
 
 public class SendLogs {
 
-    private static int count;
-
-    private static Logger logger = LogManager.getLogger(SendLogs.class);
+    // HTTP SERVER
+    // private static int count;
+    // HTTP SERVER
+    // private static Logger logger = LogManager.getLogger(SendLogs.class);
 
     public static void main(String[] args) throws IOException {
+
+
+        // Sun's HTTP server
         /*
-        // create a file
-        File file = new File("newfile.txt");
-        if(file.createNewFile()){
-            System.out.println("file.txt File Created in Project root directory");
-        } else System.out.println("File file.txt already exists in the project root directory");
-        */
-
-
         HttpServer server = HttpServer.create(new InetSocketAddress(8500), 0);
         HttpContext context = server.createContext("/boot-bootcamp");
         context.setHandler(SendLogs::handleRequest);
         server.start();
+        */
+
+        // Jetty HTTP server
+        ResourceConfig config = new ResourceConfig();
+        config.packages("jettyjersey");
+        ServletHolder servlet = new ServletHolder(new ServletContainer(config));
+
+
+        Server server = new Server(8500);
+        ServletContextHandler context = new ServletContextHandler(server, "/*");
+        context.addServlet(servlet, "/*");
+
+
+        try {
+            server.start();
+            server.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            server.destroy();
+        }
+
         System.out.println("server run successfully");
     }
 
+
+
+    // handler for HTTP request
+    /*
     private static void handleRequest(HttpExchange exchange) throws IOException, IOException {
 
         // increment count
@@ -51,6 +83,6 @@ public class SendLogs {
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());
         os.close();
-    }
+    }*/
 
 }
