@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  bootcampservice:
+    image: bootcampimg
+    deploy:
+      replicas: ${REPLICAS}
+
+  load-balancer-service:
+    image: haproxy:latest
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+    ports:
+      - 8500:${PORT}
+    environment:
+      - REPLICAS=${REPLICAS}
