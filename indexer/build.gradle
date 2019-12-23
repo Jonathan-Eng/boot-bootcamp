@@ -1,11 +1,12 @@
 plugins {
+    id 'java'
     id "application"
     id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
 apply plugin : "java"
 ext {
-    javaMainClass = "SendLogs"
+    javaMainClass = "Indexer"
 }
 
 application {
@@ -13,6 +14,7 @@ application {
 }
 
 version '1.0-SNAPSHOT'
+sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -20,32 +22,25 @@ repositories {
 
 dependencies {
 
-    // compile dependencies in infrastructure
+    // compile infrastructure
     compile project(':inf:')
 
-    // allows json injection
+    // junit
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    // json injection and parsing to object
     compile group: "org.glassfish.jersey.media",name:"jersey-media-json-jackson",version: "2.17"
 
-    // random string generation in gradle
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
-
-    // for kafka
+    // kafka
     compile group: 'org.apache.kafka', name: 'kafka-clients', version: '2.3.1'
 
-    // for testing
-    testCompile 'junit:junit:4.12'
-
 }
-
 
 shadowJar {
     manifest {
         attributes 'Main-Class': "$mainClassName"
     }
 
-    // prevents errors in log4j
+    // Add this - otherwise gives message when sending logs to LOGZIO
     transform(com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer)
 }
-
-
-

@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
+version 'unspecified'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    // for testing
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    // solve errors when running tests with Jersey
+    implementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2"
+    implementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"
+
+    // allows to read json
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.0.1'
+
+    // juice-jersey-jetty
+    compile 'io.logz:guice-jersey:1.0.9'
+
+    // for elasticsearch
+    compile 'org.elasticsearch.client:elasticsearch-rest-high-level-client:6.8.3'
+    compile 'org.elasticsearch.client:elasticsearch-rest-client'
+    compile 'org.elasticsearch:elasticsearch'
+
+    // Log4j Logger (belongs to Logz.io)
+    compile group: 'io.logz.log4j2', name: 'logzio-log4j2-appender', version: '1.0.5'
+
+    // Removes generated errors of log4j
+    compile 'org.slf4j:slf4j-api:1.7.5'
+    compile 'org.slf4j:slf4j-simple:1.6.4'
+
+    // Removes clashing with betweent log4j and elasticsearch
+    compile 'org.apache.logging.log4j:log4j-core:2.9.0'
+
+
+}
+

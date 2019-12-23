@@ -4,8 +4,7 @@ public class IndexBody {
     private String message;
 
 
-    public IndexBody(String message) {
-        this.message = message;
+    public IndexBody() {
     }
 
     public String getMessage() {

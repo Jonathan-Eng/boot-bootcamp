@@ -1,6 +1,7 @@
 FROM openjdk:8
-COPY ./logs-shipper/build/libs/ /usr/bootcamp/
-COPY ./logs-shipper/src/main/resources/server.config /usr/bootcamp/resources/server.config
-EXPOSE 8500
+COPY ./build/libs/ /usr/bootcamp/
+COPY ./build/resources/ /usr/bootcamp/resources/
+EXPOSE 8000
 WORKDIR /usr/bootcamp/
-CMD ["java", "-jar", "logs-shipper-all-1.0-SNAPSHOT.jar"]
+RUN mv logs-shipper-1.0-SNAPSHOT-all.jar shipper.jar
+CMD ["java", "-Dlog4j.configurationFile=/usr/bootcamp/resources/main/log4j2.xml", "-jar", "shipper.jar"]

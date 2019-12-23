@@ -1,8 +1,10 @@
+package jettyjersey;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Parser {
-    private static Map<String, String> getQueryMap(String query)
+    public static Map<String, String> getQueryMap(String query)
     {
         String[] params = query.split("&");
         Map<String, String> map = new HashMap<String, String>();
