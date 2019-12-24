@@ -1,5 +1,6 @@
 FROM openjdk:8
 COPY ./build/libs/ /usr/bootcamp/
+COPY ./build/resources/ /usr/bootcamp/resources/
 WORKDIR /usr/bootcamp/
 
 # Renaming the JAR file

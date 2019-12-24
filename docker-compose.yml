@@ -50,4 +50,7 @@ services:
 
   indexer:
     build: ./indexer
+    volumes:
+      - ./inf/build/resources/main/elasticsearch.config:/usr/bootcamp/resources/main/elasticsearch.config
+      - ./inf/build/resources/main/server.config:/usr/bootcamp/resources/main/server.config
 

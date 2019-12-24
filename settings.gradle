@@ -1,6 +1,6 @@
 rootProject.name = 'boot-bootcamp'
 
+include 'inf'
 include 'logs-shipper'
 include 'indexer'
-include 'inf'
 

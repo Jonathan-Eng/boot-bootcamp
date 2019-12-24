@@ -2,6 +2,7 @@ package juice.modules;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import config.ConfigFileFinder;
 import config.ConfigurationFactory;
 import config.ConsumerConfiguration;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -18,7 +19,7 @@ public class ConsumerModule extends AbstractModule {
     @Provides
     public KafkaConsumer<String, String> provideConsumer() {
         ConsumerConfiguration cc = ConfigurationFactory.create(
-                CONFIG_FILE_NAME,
+                ConfigFileFinder.findRealPath(CONFIG_FILE_NAME),
                 ConsumerConfiguration.class);
 
         Properties props = new Properties();

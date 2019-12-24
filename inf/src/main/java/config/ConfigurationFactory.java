@@ -23,6 +23,7 @@ public class ConfigurationFactory {
         try {
 
             // get json map
+//            System.out.println("!!!!!" + filePath);
             Map<String, Object> jsonMap = getJsonMap(filePath);
 
             // get constuctor of class represented by jsonMap

@@ -27,7 +27,6 @@ public class ResourceTest {
         sc = ConfigurationFactory.create(
                 ConfigFileFinder.findRealPath(CONFIG_FILE_NAME),
                 ServerConfiguration.class);
-
     }
 
 
