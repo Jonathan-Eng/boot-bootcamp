@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import static java.util.Objects.requireNonNull;
 
 @Singleton
 @Path("/")
@@ -23,10 +24,19 @@ public class IndexResource {
 
     private final KafkaProducer<String, String> prod;
     private static int prodRecNum = 0;
+    private String topic = "my_topic";
 
     @Inject
     public IndexResource(KafkaProducer<String, String> prod) {
-        this.prod = prod;
+        this.prod = requireNonNull(prod);
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 
     @POST
@@ -49,15 +59,13 @@ public class IndexResource {
         jsonMap.put("message", indexBody.getMessage());
         jsonMap.put("User-Agent", userAgent);
 
-
         try {
-
             // write indexBody as String
             ObjectMapper objectMapper = new ObjectMapper();
             String msg = objectMapper.writeValueAsString(jsonMap);
 
             // create record to send
-            ProducerRecord<String, String> prodRecord = new ProducerRecord<>("my_topic", Integer.toString(++prodRecNum), msg);
+            ProducerRecord<String, String> prodRecord = new ProducerRecord<>(topic, Integer.toString(++prodRecNum), msg);
             prod.send(prodRecord);
 
             System.out.println("Successfully Sent message: " + msg);

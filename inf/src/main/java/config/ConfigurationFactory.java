@@ -32,11 +32,10 @@ public class ConfigurationFactory {
             // use map to construct instance of classObj
             return constructor.newInstance(new Object[] {jsonMap});
 
-        } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException | IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
 
-        return null;
     }
 
     /**

@@ -3,7 +3,7 @@ package jettyjersey;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Parser {
+public class QueryStringParser {
     public static Map<String, String> getQueryMap(String query)
     {
         String[] params = query.split("&");

@@ -9,9 +9,6 @@ public class IndexerModule extends AbstractModule {
         install(new ElasticsearchClientModule());
         install(new ConsumerModule());
         bind(Indexer.class);
-
-
-//        bind(IndexConsumer.class).asEagerSingleton(); TODO add this line if needed
     }
 
 }
