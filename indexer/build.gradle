@@ -6,7 +6,7 @@ plugins {
 
 apply plugin : "java"
 ext {
-    javaMainClass = "main.Indexer"
+    javaMainClass = "main.IndexerMain"
 }
 
 application {

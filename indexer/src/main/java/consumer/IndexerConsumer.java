@@ -1,81 +1,78 @@
-package main;
+package consumer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Guice;
 import com.google.inject.Inject;
-import juice.modules.IndexerModule;
-import juice.modules.StrictExplicitBindingModule;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import parser.JsonParser;
+
 import javax.inject.Singleton;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
 import static java.util.Objects.requireNonNull;
 
 @Singleton
-public class Indexer {
+public class IndexerConsumer {
 
     private final KafkaConsumer<String, String> consumer;
-    private final RestHighLevelClient client;
+    private final RestHighLevelClient elasticsearchClient;
     private String topic = "my_topic";
+    private static final Logger logger = LogManager.getLogger(IndexerConsumer.class);
 
     public void setTopic(String topic) {
         this.topic = topic;
     }
 
     @Inject
-    public Indexer(KafkaConsumer<String, String> consumer, RestHighLevelClient client) {
+    public IndexerConsumer(KafkaConsumer<String, String> consumer, RestHighLevelClient elasticsearchClient) {
         this.consumer = requireNonNull(consumer);
-        this.client = requireNonNull(client);
+        this.elasticsearchClient = requireNonNull(elasticsearchClient);
     }
 
     public void consume() {
 
-        // subscribe to topic
         consumer.subscribe(Collections.singletonList(topic));      // list contains just 1 topic
 
         // consume forever
         while (true) {
-
-            // prepare object mapper to read json
-            ObjectMapper objectMapper = new ObjectMapper();
-
-            // poll records
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
-
+            if (records.isEmpty()) continue;
+            BulkRequest request = new BulkRequest();
             records.forEach(r -> {
 
                 // index record to ES
                 try {
-                    // convert record to Map
-                    Map<String, String> rValAsMap = objectMapper.readValue(r.value(), Map.class);
-
-                    // index request
+                    Map<String, String> rValAsMap = JsonParser.getObjFromJsonString(r.value(), Map.class);
                     IndexRequest indexRequest = new IndexRequest("logs", "_doc")
                             .source(rValAsMap);
-                    client.index(indexRequest, RequestOptions.DEFAULT);
+                    request.add(indexRequest);
 
-                    // print indexed record
-                    System.out.printf("Record was indexed: (%s, %s, %d, %d)\n",
+                    logger.debug("Record was indexed: (%s, %s, %d, %d)\n",
                             r.key(), r.value(), r.partition(), r.offset());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             });
 
-            consumer.commitAsync(); // TODO check if commitSync is more appropriate
-        }
-        // TODO close client
-        //client.close();
-    }
+            if (request.numberOfActions() == 0) continue;
+            try {
+                BulkResponse bulkResponse =elasticsearchClient.bulk(request, RequestOptions.DEFAULT);
+                if (bulkResponse.hasFailures()) {
 
-    public static void main(String[] args) {
-        Guice.createInjector(new IndexerModule(), new StrictExplicitBindingModule())
-                .getInstance(Indexer.class).consume();
-        System.out.println("Consumer is running!");
+                    logger.debug("Bulk: an error has occured in bulk response");
+                }
+                consumer.commitAsync();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

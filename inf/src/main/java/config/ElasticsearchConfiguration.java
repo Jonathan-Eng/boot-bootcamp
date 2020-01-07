@@ -1,22 +1,19 @@
 package config;
 
-import java.util.Map;
+import javax.validation.constraints.NotNull;
 
 public class ElasticsearchConfiguration {
 
-    private static final String HOSTNAME_KEY = "host";
-    private static final String PORT_KEY = "port";
-    private static final String SCHEME_KEY = "scheme";
-
+    @NotNull
     private String hostname;
+
+    @NotNull
     private int port;
+
+    @NotNull
     private String scheme;
 
-    public ElasticsearchConfiguration(Map<String, Object> jsonMap) {
-        this.hostname = (String) jsonMap.get(HOSTNAME_KEY);
-        this.port = (Integer) jsonMap.get(PORT_KEY);
-        this.scheme = (String) jsonMap.get(SCHEME_KEY);
-    }
+    public ElasticsearchConfiguration(){}
 
     public String getHostname() { return hostname; }
     public int getPort() { return port; }

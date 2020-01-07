@@ -15,6 +15,8 @@ import static org.awaitility.Awaitility.await;
 public class ResourceTest {
 
     private static final String CONFIG_FILE_NAME = "server.config";
+    private static final int RANDOM_STRING_LEN = 20;
+    private static final int MAX_SEC_TO_WAIT = 15;
     private final ServerConfiguration sc;
     public LogsShipperClient handler;
 
@@ -31,26 +33,21 @@ public class ResourceTest {
      */
     @Test
     public void testIndexAndSearch () throws InterruptedException {
+        String userAgentHeader = "Mozilla/5.0 (Macintosh; Intel Mac OS X)";
+        String randomString = genRandomString();
+        String msgInJsonFormat = "{\"message\":\"" + randomString + "\"}";
 
-        // user agent header
-        String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X)";
+        Response response = handler.indexRequestWithCustomMessage(msgInJsonFormat, userAgentHeader);
 
-        // generate random String
-        String randomString = RandomStringUtils.randomAlphabetic(20);
-
-        // adapt to json format
-        String jsonObjectAsString = "{\"message\":\"" + randomString + "\"}";
-
-        // index to es
-        Response response = handler.indexRequestWithCustomMessage(jsonObjectAsString, userAgent);
-
-        // assert if request went wrong
         assertNotNull(response);
         assertEquals(response.getStatus(), HttpURLConnection.HTTP_OK);
 
-        // search for string at most 15 sec. if not found within this time await throws
-        await().atMost(15, TimeUnit.SECONDS).until(() -> isDocumentIndexed(randomString, userAgent));
+        // search for string at most 15 sec. if not found within this time await throws an exception
+        await().atMost(MAX_SEC_TO_WAIT, TimeUnit.SECONDS).until(() -> isDocumentIndexed(randomString, userAgentHeader));
+    }
 
+    private static String genRandomString() {
+        return RandomStringUtils.randomAlphabetic(RANDOM_STRING_LEN);
     }
 
     private boolean isDocumentIndexed(String randomString, String userAgentHeader) {

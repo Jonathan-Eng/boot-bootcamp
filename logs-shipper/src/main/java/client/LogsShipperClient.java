@@ -29,7 +29,6 @@ public class LogsShipperClient {
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.USER_AGENT, userAgent)
                 .post(Entity.json(message));
-
     }
 
 

@@ -11,10 +11,9 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.util.Properties;
 
-public class ConsumerModule extends AbstractModule {
+public class KafkaConsumerModule extends AbstractModule {
 
     private final String CONFIG_FILE_NAME = "consumer.config";
-
 
     @Provides
     public KafkaConsumer<String, String> provideConsumer() {
@@ -27,7 +26,7 @@ public class ConsumerModule extends AbstractModule {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.GROUP_ID_CONFIG, cc.getGroupId());
-
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         return new KafkaConsumer<>(props);
     }
 

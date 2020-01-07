@@ -1,4 +1,4 @@
-package jettyjersey;
+package parser;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,26 +1,23 @@
 package config;
 
-import java.util.Map;
+import javax.validation.constraints.NotNull;
 
 public class ServerConfiguration {
 
-    private static final String LOG_MESSAGE_KEY = "logMessage";
-    private static final String PACKAGE_NAME_KEY = "packageName";
-    private static final String PORT_KEY = "port";
-    private static final String HOST_KEY = "host";
-
+    @NotNull
     private String logMessage;
+
+    @NotNull
     private String packageName;
+
+    @NotNull
     private int port;
+
+    @NotNull
     private String host;
 
 
-    public ServerConfiguration (Map<String, Object> jsonMap) {
-        this.logMessage = (String) jsonMap.get(LOG_MESSAGE_KEY);
-        this.packageName = (String) jsonMap.get(PACKAGE_NAME_KEY);
-        this.port = (Integer) jsonMap.get(PORT_KEY);
-        this.host = (String) jsonMap.get(HOST_KEY);
-    }
+    public ServerConfiguration(){}
 
     public String getHost() {
         return host;

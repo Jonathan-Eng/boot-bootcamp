@@ -9,6 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 //for elasticsearch
@@ -21,6 +22,8 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.apache.logging.log4j.Logger;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+
 import static java.util.Objects.requireNonNull;
 
 @Path("/")
@@ -30,7 +33,6 @@ public class Resource {
     private static Logger logger = LogManager.getLogger(Resource.class);
     private LogsConfiguration logsConfig;
 
-
     @Inject
     public Resource(LogsConfiguration logsConfig) {
         this.logsConfig = requireNonNull(logsConfig);
@@ -39,7 +41,7 @@ public class Resource {
     @GET
     @Path("boot-bootcamp")
     @Produces(MediaType.TEXT_PLAIN)
-    public String logBootBoot() throws IOException {
+    public Response logBootBoot() throws IOException {
 
         // increment count
         count++;
@@ -50,6 +52,6 @@ public class Resource {
         // send a log
         logger.info(response);
 
-        return response;
+        return Response.ok().entity(response).build();
     }
 }

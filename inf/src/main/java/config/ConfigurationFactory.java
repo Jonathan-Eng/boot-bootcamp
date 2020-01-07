@@ -1,14 +1,7 @@
 package config;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
+import java.io.FileInputStream;
 
 public class ConfigurationFactory {
 
@@ -21,35 +14,12 @@ public class ConfigurationFactory {
      */
     public static <T> T create (String filePath, Class<T> classObj) {
         try {
-
-            // get json map
-//            System.out.println("!!!!!" + filePath);
-            Map<String, Object> jsonMap = getJsonMap(filePath);
-
-            // get constuctor of class represented by jsonMap
-            Constructor<T> constructor = classObj.getConstructor(Map.class);
-
-            // use map to construct instance of classObj
-            return constructor.newInstance(new Object[] {jsonMap});
-
+            ObjectMapper objectMapper = new ObjectMapper();
+            FileInputStream fileInputStream = new FileInputStream(filePath);
+            return objectMapper.readValue(fileInputStream, classObj);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
 
     }
-
-    /**
-     * Reads from a json file located in filePath and generates a Map<String, Object> that reflects the json file
-     * @param filePath - path to json file
-     * @return Map<String, Object>
-     * @throws IOException
-     */
-    private static Map<String, Object> getJsonMap(String filePath) throws IOException {
-        ObjectMapper objMapper = new ObjectMapper();
-        return objMapper.readValue(
-                new File(filePath),
-                new TypeReference<Map<String, Object>>() {});
-    }
-
-
 }

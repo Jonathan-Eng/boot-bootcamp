@@ -1,16 +1,13 @@
 package config;
 
-import java.util.Map;
+import javax.validation.constraints.NotNull;
 
 public class LogsConfiguration {
 
-    private final String MSG_KEY = "msg";
-
+    @NotNull
     private String msg;
 
-    public LogsConfiguration(Map<String, Object> jsonMap) {
-        this.msg = (String) jsonMap.get(MSG_KEY);
-    }
+    public LogsConfiguration() {}
 
     public String getMsg() {
         return msg;

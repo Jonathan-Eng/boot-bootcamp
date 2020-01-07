@@ -15,23 +15,9 @@ public class ConfigFileFinder {
 
     public static String findRealPath(String fileName) {
 
-////        System.out.println(System.getProperty("user.dir"));
-//        File folder = new File(System.getProperty("user.dir") + "/resources/main");
-//        File[] listOfFiles = folder.listFiles();
-//
-//        for (int i = 0; i < listOfFiles.length; i++) {
-//            if (listOfFiles[i].isFile()) {
-//                System.out.println("File " + listOfFiles[i].getName());
-//            } else if (listOfFiles[i].isDirectory()) {
-//                System.out.println("Directory " + listOfFiles[i].getName());
-//            }
-//        }
-
         String realPath = supportedPaths.get(0) + fileName;
 
         for (String path : supportedPaths) {
-//            System.out.println("?????" + path + fileName);
-//            System.out.println(new File(path + fileName).getAbsolutePath());
             File f = new File(path + fileName);
 
             if (f.exists()) {
@@ -42,7 +28,4 @@ public class ConfigFileFinder {
 
         return realPath;
     }
-
-
-
 }

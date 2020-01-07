@@ -1,21 +1,22 @@
 package config;
 
+import javax.validation.constraints.NotNull;
 import java.util.Map;
 
-public class ConsumerConfiguration {
-    private final String HOST_KEY = "host";
-    private final String PORT_KEY = "port";
-    private final String GROUP_ID_KEY = "group.id";
+import static java.util.Objects.requireNonNull;
 
+public class ConsumerConfiguration {
+
+    @NotNull
     private String host;
+
+    @NotNull
     private int port;
+
+    @NotNull
     private String groupId;
 
-    public ConsumerConfiguration(Map<String, Object> jsonMap) {
-        this.host = (String) jsonMap.get(HOST_KEY);
-        this.port = (Integer) jsonMap.get(PORT_KEY);
-        this.groupId = (String) jsonMap.get(GROUP_ID_KEY);
-    }
+    public ConsumerConfiguration() {}
 
     public String getHost() { return host; }
     public int getPort() { return port; }

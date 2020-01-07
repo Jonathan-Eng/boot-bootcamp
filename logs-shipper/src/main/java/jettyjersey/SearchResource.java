@@ -9,6 +9,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import parser.QueryStringParser;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

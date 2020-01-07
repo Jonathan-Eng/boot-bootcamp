@@ -14,22 +14,22 @@ public class ServerModule extends AbstractModule {
 
     private final String CONFIG_FILE_NAME = "server.config";
 
-    private JerseyConfiguration jc;
-    private ServerConfiguration sc;
+    private JerseyConfiguration jerseyConfiguration;
+    private ServerConfiguration serverConfiguration;
 
 
     public ServerModule() {
-        sc = ConfigurationFactory.create(
+        serverConfiguration = ConfigurationFactory.create(
                 ConfigFileFinder.findRealPath(CONFIG_FILE_NAME),
                 ServerConfiguration.class);
 
-        jc = JerseyConfiguration.builder()
-                .addPackage(sc.getPackageName()).addPort(sc.getPort()).build();
+        jerseyConfiguration = JerseyConfiguration.builder()
+                .addPackage(serverConfiguration.getPackageName()).addPort(serverConfiguration.getPort()).build();
     }
 
     @Override
     protected void configure() {
-        install(new JerseyModule(jc));
+        install(new JerseyModule(jerseyConfiguration));
     }
 
 }
