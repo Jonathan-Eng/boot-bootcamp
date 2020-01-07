@@ -1,2 +1,6 @@
-rootProject.name = 'untitled'
+rootProject.name = 'boot-bootcamp'
+
+include 'inf'
+include 'logs-shipper'
+include 'indexer'
 

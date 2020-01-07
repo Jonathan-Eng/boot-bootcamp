@@ -1,47 +1,12 @@
-plugins {
-    id 'java'
-    id "application"
+//project(':logs-shipper')
+//project(':indexer')
+
+task start(type: Exec) {
+    executable "sh"
+    args "-c","./gradlew shadowJar && docker-compose --compatibility up --build"
 }
 
-apply plugin : "java"
-ext {
-    javaMainClass = "SendLogs"
+task quit(type: Exec) {
+    executable "sh"
+    args "-c","docker-compose down && ./gradlew clean"
 }
-
-application {
-    mainClassName = javaMainClass
-}
-
-version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile group: 'io.logz.log4j2', name: 'logzio-log4j2-appender', version: '1.0.5'
-    compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.2.3.v20140905'
-    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.2.3.v20140905'
-    compile group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.7'
-    compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: '2.7'
-    compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-jetty-http', version: '2.7'
-
-    // Removes generated errors
-    compile 'org.slf4j:slf4j-api:1.7.5'
-    compile 'org.slf4j:slf4j-simple:1.6.4'
-}
-
-
-task fatJar(type: Jar) {
-    manifest {
-        attributes 'Main-Class': 'SendLogs'
-    }
-    baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
-
-

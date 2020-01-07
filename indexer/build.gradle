@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id "application"
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
+apply plugin : "java"
+ext {
+    javaMainClass = "main.IndexerMain"
+}
+
+application {
+    mainClassName = javaMainClass
+}
+
+version '1.0-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    // compile infrastructure
+    compile project(':inf:')
+
+    // junit
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    // json injection and parsing to object
+    compile group: "org.glassfish.jersey.media",name:"jersey-media-json-jackson",version: "2.17"
+
+    // kafka
+    compile group: 'org.apache.kafka', name: 'kafka-clients', version: '2.3.1'
+
+}
+
+shadowJar {
+    manifest {
+        attributes 'Main-Class': "$mainClassName"
+    }
+
+    // Add this - otherwise gives message when sending logs to LOGZIO
+    transform(com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer)
+}
