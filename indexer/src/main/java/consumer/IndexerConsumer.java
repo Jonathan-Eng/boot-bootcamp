@@ -17,7 +17,6 @@ import parser.JsonParser;
 import pojos.Account;
 
 import javax.inject.Singleton;
-import java.io.IOException;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
