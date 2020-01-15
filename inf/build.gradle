@@ -21,7 +21,7 @@ dependencies {
     implementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"
 
     // allows to read json
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.0.1'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.5.3'
 
     // juice-jersey-jetty
     compile 'io.logz:guice-jersey:1.0.9'
@@ -40,6 +40,10 @@ dependencies {
 
     // Removes clashing with betweent log4j and elasticsearch
     compile 'org.apache.logging.log4j:log4j-core:2.9.0'
+
+    // Random String using Regex - https://github.com/mifmif/Generex
+    compile 'com.github.mifmif:generex:1.0.2'
+
 
 }
 

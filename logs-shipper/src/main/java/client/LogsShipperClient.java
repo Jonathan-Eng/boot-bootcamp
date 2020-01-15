@@ -1,5 +1,7 @@
 package client;
 
+import globals.accounts.AccountGlobals;
+
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -23,9 +25,9 @@ public class LogsShipperClient {
      * @param message - the custom message that we index, along with a static user-agent.
      * @return
      */
-    public Response indexRequestWithCustomMessage(String message, String userAgent) {
+    public Response indexRequestWithCustomMessage(String token, String message, String userAgent) {
 
-        return webTarget.path("index")
+        return webTarget.path("index/" + token)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.USER_AGENT, userAgent)
                 .post(Entity.json(message));
@@ -39,12 +41,13 @@ public class LogsShipperClient {
      * @param message - the custom message that we wish to search for
      * @return
      */
-    public Response searchRequestWithCustomMessage(String message, String userAgentHeader) {
+    public Response searchRequestWithCustomMessage(String token, String message, String userAgentHeader) {
 
         return webTarget.path("search")
                 .queryParam("message", message)
                 .queryParam("User-Agent",userAgentHeader)
-                .request(MediaType.APPLICATION_JSON) // I want in return to get text
-                .get(Response.class);   // convert the json response to Response class
+                .request(MediaType.APPLICATION_JSON)
+                .header(AccountGlobals.ACCOUNT_X_TOKEN, token)
+                .get(Response.class);
     }
 }

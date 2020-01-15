@@ -1,6 +1,7 @@
 package api;
 
-public class AccountTokenUnauthorizedException extends Throwable {
-    public AccountTokenUnauthorizedException(String s) {
+public class AccountTokenUnauthorizedException extends Exception {
+    public AccountTokenUnauthorizedException(String msg) {
+        super(msg);
     }
 }

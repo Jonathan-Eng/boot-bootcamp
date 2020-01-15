@@ -1,6 +1,3 @@
-//project(':logs-shipper')
-//project(':indexer')
-
 task start(type: Exec) {
     executable "sh"
     args "-c","./gradlew shadowJar && docker-compose --compatibility up --build"

@@ -25,6 +25,9 @@ dependencies {
     // compile infrastructure
     compile project(':inf:')
 
+    // compile accounts service client
+    compile project(':accounts-service:client')
+
     // junit
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
@@ -33,6 +36,9 @@ dependencies {
 
     // kafka
     compile group: 'org.apache.kafka', name: 'kafka-clients', version: '2.3.1'
+
+    // client
+    testCompile project(':accounts-service:client')
 
 }
 

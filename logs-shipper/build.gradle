@@ -23,6 +23,7 @@ dependencies {
     // compile dependencies in infrastructure
     compile project(':inf:')
 
+
     // allows json injection
     compile group: "org.glassfish.jersey.media",name:"jersey-media-json-jackson",version: "2.17"
 
@@ -38,6 +39,9 @@ dependencies {
     // optimize wait. allows setting max {time, condition} to wait for event.
     testCompile 'org.awaitility:awaitility:4.0.1'
 
+    //compile accounts client
+    compile project(':accounts-service:client')
+    testCompile project(':accounts-service:client')
 }
 
 

@@ -1,6 +1,7 @@
 package api;
 
 public class AccountInvalidTokenException extends Throwable {
-    public AccountInvalidTokenException(String s) {
+    public AccountInvalidTokenException(String msg) {
+        super(msg);
     }
 }

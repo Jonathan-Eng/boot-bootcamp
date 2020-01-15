@@ -9,8 +9,4 @@ public class CreateAccountBody {
     public String getAccountName() {
         return accountName;
     }
-
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
-    }
 }

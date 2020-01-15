@@ -1,7 +1,7 @@
 package api;
 
-public class InvalidAccountNameException extends Throwable {
-    public InvalidAccountNameException(String msg) {
+public class AccountInvalidNameException extends Exception {
+    public AccountInvalidNameException(String msg) {
         super(msg);
     }
 }

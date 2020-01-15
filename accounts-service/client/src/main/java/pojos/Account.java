@@ -6,6 +6,9 @@ public class Account {
     private String token;
     private String esindex;
 
+    // Default Constructor for Jackson
+    public Account() {}
+
     public Account(String name, String token, String esindex) {
         this.name = name;
         this.token = token;

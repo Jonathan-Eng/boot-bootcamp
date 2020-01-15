@@ -1,14 +1,11 @@
 package jettyjersey;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import config.ConfigFileFinder;
 import mybatis.mappers.AccountMapper;
 import pattern.PatternValidator;
 import pattern.PatternedStringGenerator;
 import pojos.Account;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
+import util.AccountResponses;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -17,12 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
-import java.net.HttpURLConnection;
-import java.util.HashMap;
-import java.util.Map;
 
 @Path("/")
 public class CreateAccountResource {
@@ -38,55 +30,24 @@ public class CreateAccountResource {
     @Path("create-account")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createAccount(CreateAccountBody createAccountBody) throws IOException {
+    public Response createAccount(CreateAccountBody createAccountBody) {
         String accountName = createAccountBody.getAccountName();
 
-        // check account name abides pattern
-        if(!PatternValidator.isNameValid(accountName)) {
-            String badRequestMsg = String.format("Account name %s does not abide by the account name pattern\n", accountName);
-            return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                    .entity(badRequestMsg).build();
-        }
+        if(!PatternValidator.isNameValid(accountName)) return AccountResponses.invalidAccountName(accountName);
 
-        // check account name not already exists
         if (accountMapper.getAccountByName(accountName) != null) {
-            String badRequestMsg = String.format("Account name %s already exists\n", accountName);
-            return Response.status(HttpURLConnection.HTTP_CONFLICT)
-            .entity(badRequestMsg).build();
+            return AccountResponses.accountNameAlreadyExists(accountName);
         }
 
-        String token = generateUniqueToken();
-        String esindex = generateUniqueEsindex();
+        String token = PatternedStringGenerator.generateToken();
+        String esindex = PatternedStringGenerator.generateEsindex();
 
         Account account = new Account(accountName, token, esindex);
         accountMapper.insert(account);
 
-        // try return valid response
-        try {
-            return Response.status(HttpURLConnection.HTTP_OK).entity(account.toJsonString()).build();
-        }
-        catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        Account accountWithId = accountMapper.getAccountByToken(token);
 
-        // if reached here - json parsing went wrong
-        return Response.status(HttpURLConnection.HTTP_NOT_ACCEPTABLE).entity("Task failed. Could not parse json").build();
+        return AccountResponses.tokenOkResponse(accountWithId);
+
     }
-
-    private String generateUniqueToken() {
-        String token = "";
-        do {
-            token = PatternedStringGenerator.generateToken();
-        } while (accountMapper.getAccountByToken(token) != null);
-        return token;
-    }
-
-    private String generateUniqueEsindex() {
-        String esindex = "";
-        do {
-            esindex = PatternedStringGenerator.generateEsindex();
-        } while (accountMapper.getAccountByEsindex(esindex) != null);
-        return esindex;
-    }
-
 }
