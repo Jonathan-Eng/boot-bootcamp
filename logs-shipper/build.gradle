@@ -23,7 +23,6 @@ dependencies {
     // compile dependencies in infrastructure
     compile project(':inf:')
 
-
     // allows json injection
     compile group: "org.glassfish.jersey.media",name:"jersey-media-json-jackson",version: "2.17"
 

@@ -20,6 +20,7 @@ services:
     deploy:
       replicas: ${REPLICAS}
     volumes:
+      - ./inf/build/resources/main/log4j2.xml:/usr/bootcamp/resources/main/log4j2.xml
       - ./inf/build/resources/main/elasticsearch.config:/usr/bootcamp/resources/main/elasticsearch.config
       - ./inf/build/resources/main/server.config:/usr/bootcamp/resources/main/server.config
 
@@ -65,6 +66,7 @@ services:
   indexer:
     build: ./indexer
     volumes:
+      - ./inf/build/resources/main/log4j2.xml:/usr/bootcamp/resources/main/log4j2.xml
       - ./inf/build/resources/main/elasticsearch.config:/usr/bootcamp/resources/main/elasticsearch.config
       - ./inf/build/resources/main/server.config:/usr/bootcamp/resources/main/server.config
     ports:
@@ -74,6 +76,7 @@ services:
   accounts-service:
     build: ./accounts-service
     volumes:
+      - ./inf/build/resources/main/log4j2.xml:/usr/bootcamp/resources/main/log4j2.xml
       - ./inf/build/resources/main/server.config:/usr/bootcamp/resources/main/server.config
       - ./accounts-service/build/resources/main/mybatis/mybatis.config:/usr/bootcamp/resources/main/mybatis/mybatis.config
     ports:

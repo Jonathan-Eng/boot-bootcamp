@@ -82,8 +82,7 @@ public class IndexerConsumer {
                         .source(rValAsMap);
                 bulkRequest.add(indexRequest);
 
-                logger.debug("Record was added to bulk request: (%s, %s, %d, %d)\n",
-                        r.key(), r.value(), r.partition(), r.offset());
+                logger.debug("Record was added to bulk request: ({}, {}, {}, {})\n", r.key(), r.value(), r.partition(), r.offset());
             } catch (Exception | AccountInvalidTokenException e) {
                 e.printStackTrace();
             }
