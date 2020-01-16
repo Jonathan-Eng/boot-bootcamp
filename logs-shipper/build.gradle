@@ -41,6 +41,9 @@ dependencies {
     //compile accounts client
     compile project(':accounts-service:client')
     testCompile project(':accounts-service:client')
+
+    // compile logs-shipper client
+    testCompile project(':logs-shipper:client')
 }
 
 
