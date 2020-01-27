@@ -17,7 +17,7 @@ public class JsonParser {
         }
     }
 
-    public static <T> String getJsonStringFromObject(T obj) {
+    public static String getJsonStringFromObject(Object obj) {
         try {
             return objectMapper.writeValueAsString(obj);
         }

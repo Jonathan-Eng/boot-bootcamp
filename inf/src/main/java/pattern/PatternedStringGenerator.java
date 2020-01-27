@@ -24,7 +24,7 @@ public class PatternedStringGenerator {
      * Generates a random account ES index, abides by the ESINDEX_PATTERN pattern
      * @return
      */
-    public static String generateEsindex() {
+    public static String generateEsIndex() {
         return new Generex(PatternValidator.ESINDEX_PATTERN).random();
     }
 

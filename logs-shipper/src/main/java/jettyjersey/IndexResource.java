@@ -3,6 +3,7 @@ package jettyjersey;
 import api.AccountInvalidTokenException;
 import api.AccountTokenUnauthorizedException;
 import api.AccountsServiceApi;
+import config.ProducerConfiguration;
 import globals.accounts.AccountGlobals;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -32,24 +33,17 @@ import static java.util.Objects.requireNonNull;
 public class IndexResource {
 
     private final KafkaProducer<String, String> prod;
-    private static int prodRecNum = 0;
-    private String topic = "my_topic";
+    private final ProducerConfiguration producerConfiguration;
     private final static Logger logger = LogManager.getLogger(IndexResource.class);
     private AccountsServiceApi accountsServiceApi;
 
     @Inject
-    public IndexResource(KafkaProducer<String, String> prod) {
+    public IndexResource(KafkaProducer<String, String> prod, AccountsServiceApi accountsServiceApi, ProducerConfiguration producerConfiguration) {
         this.prod = requireNonNull(prod);
-        this.accountsServiceApi = new AccountsServiceApi();
+        this.accountsServiceApi = accountsServiceApi;
+        this.producerConfiguration = producerConfiguration;
     }
 
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
 
     @POST
     @Path("/index/{" + AccountGlobals.ACCOUNT_TOKEN + "}")
@@ -87,7 +81,7 @@ public class IndexResource {
             String msg = JsonParser.getJsonStringFromObject(jsonMap);
 
             // create record to send
-            ProducerRecord<String, String> prodRecord = new ProducerRecord<>(topic, accountToken, msg);
+            ProducerRecord<String, String> prodRecord = new ProducerRecord<>(producerConfiguration.getTopic(), accountToken, msg);
             prod.send(prodRecord);
 
             logger.debug("Successfully Sent message: " + msg);

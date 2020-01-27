@@ -9,7 +9,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.HttpURLConnection;
-import java.util.Optional;
 
 public class AccountsServiceApi {
 
@@ -90,10 +89,10 @@ public class AccountsServiceApi {
          * @return
          */
         public Response createAccount(String accountName) {
-            String jsonRequestStr = String.format("{\"accountName\": \"%s\"}", accountName);
+
             return webTarget.path(CREATE_ACCOUNT_ENDPOINT)
                     .request(MediaType.APPLICATION_JSON)
-                    .post(Entity.json(jsonRequestStr));
+                    .post(Entity.json(new CreateAccountRequest(accountName)));
         }
     }
 

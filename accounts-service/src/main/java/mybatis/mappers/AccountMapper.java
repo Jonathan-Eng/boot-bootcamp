@@ -8,5 +8,5 @@ public interface AccountMapper {
 
     Account getAccountByName(String name);
     Account getAccountByToken(@Param("token") String token);
-    Account getAccountByEsindex(@Param("esindex") String esindex);
+    Account getAccountByEsIndex(@Param("esIndex") String esIndex);
 }

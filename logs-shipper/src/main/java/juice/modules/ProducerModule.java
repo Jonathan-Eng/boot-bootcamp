@@ -14,25 +14,32 @@ import java.util.Properties;
 public class ProducerModule extends AbstractModule {
 
     private final String CONFIG_FILE_NAME = "producer.config";
+    private final ProducerConfiguration producerConfiguration;
+
+    public ProducerModule() {
+        this.producerConfiguration = ConfigurationFactory.create(
+                ConfigFileFinder.findRealPath(CONFIG_FILE_NAME),
+                ProducerConfiguration.class
+        );
+    }
+
+    @Provides
+    ProducerConfiguration provideProducerConfiguration() {
+        return this.producerConfiguration;
+    }
 
     @Provides
     KafkaProducer<String, String> getKafkaProducer() {
 
-        ProducerConfiguration pc = ConfigurationFactory.create(
-                ConfigFileFinder.findRealPath(CONFIG_FILE_NAME),
-                ProducerConfiguration.class
-        );
-
         // init kafka properties
         Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, pc.getHost() + ":" + pc.getPort());
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, producerConfiguration.getHost() + ":" + producerConfiguration.getPort());
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        props.put(ProducerConfig.CLIENT_ID_CONFIG, pc.getClientId());
+        props.put(ProducerConfig.CLIENT_ID_CONFIG, producerConfiguration.getClientId());
 
         // create producer
         return new KafkaProducer<String, String>(props);
-
     }
 
 }

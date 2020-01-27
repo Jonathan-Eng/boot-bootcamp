@@ -1,9 +1,10 @@
 package consumer;
 
 import api.AccountInvalidTokenException;
+import api.AccountTokenUnauthorizedException;
 import api.AccountsServiceApi;
 import com.google.inject.Inject;
-import globals.accounts.AccountGlobals;
+import config.ConsumerConfiguration;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.logging.log4j.LogManager;
@@ -28,24 +29,23 @@ public class IndexerConsumer {
 
     private final KafkaConsumer<String, String> consumer;
     private final RestHighLevelClient elasticsearchClient;
-    private String topic = "my_topic";
     private static final Logger logger = LogManager.getLogger(IndexerConsumer.class);
     private final AccountsServiceApi accountsServiceApi;
+    private final ConsumerConfiguration consumerConfiguration;
 
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
 
     @Inject
-    public IndexerConsumer(KafkaConsumer<String, String> consumer, RestHighLevelClient elasticsearchClient) {
+    public IndexerConsumer(KafkaConsumer<String, String> consumer, RestHighLevelClient elasticsearchClient,
+                           AccountsServiceApi accountsServiceApi, ConsumerConfiguration consumerConfiguration) {
         this.consumer = requireNonNull(consumer);
         this.elasticsearchClient = requireNonNull(elasticsearchClient);
-        this.accountsServiceApi = new AccountsServiceApi();
+        this.accountsServiceApi = accountsServiceApi;
+        this.consumerConfiguration = consumerConfiguration;
     }
 
     public void consume() {
 
-        consumer.subscribe(Collections.singletonList(topic));      // list contains just 1 topic
+        consumer.subscribe(Collections.singletonList(consumerConfiguration.getTopic()));      // list contains just 1 topic
 
         // consume forever
         while (true) {
@@ -58,7 +58,6 @@ public class IndexerConsumer {
             try {
                 BulkResponse bulkResponse =elasticsearchClient.bulk(request, RequestOptions.DEFAULT);
                 if (bulkResponse.hasFailures()) {
-
                     logger.debug("Bulk: an error has occured in bulk response " + bulkResponse.buildFailureMessage());
                 }
                 consumer.commitAsync();
@@ -74,15 +73,15 @@ public class IndexerConsumer {
 
             // index record to ES
             try {
-                Map<String, String> rValAsMap = JsonParser.getObjFromJsonString(r.value(), Map.class);
+                Map<String, Object> rValAsMap = JsonParser.getObjFromJsonString(r.value(), Map.class);
 
                 Account account = accountsServiceApi.getAccount(r.key());
-                IndexRequest indexRequest = new IndexRequest(account.getEsindex(), "_doc")
+                IndexRequest indexRequest = new IndexRequest(account.getEsIndex(), "_doc")
                         .source(rValAsMap);
                 bulkRequest.add(indexRequest);
 
                 logger.debug("Record was added to bulk request: ({}, {}, {}, {})\n", r.key(), r.value(), r.partition(), r.offset());
-            } catch (Exception | AccountInvalidTokenException e) {
+            } catch (AccountInvalidTokenException | AccountTokenUnauthorizedException e) {
                 e.printStackTrace();
             }
         });

@@ -42,9 +42,9 @@ public class SearchResource {
     private final AccountsServiceApi accountsServiceApi;
 
     @Inject
-    public SearchResource(RestHighLevelClient esClient) {
+    public SearchResource(RestHighLevelClient esClient, AccountsServiceApi accountsServiceApi) {
         this.esClient = requireNonNull(esClient);
-        this.accountsServiceApi = new AccountsServiceApi();
+        this.accountsServiceApi = accountsServiceApi;
     }
 
     @GET
@@ -77,7 +77,7 @@ public class SearchResource {
     }
 
     private SearchRequest buildSearchRequest(Account account, Map<String, String> queryMap) {
-        SearchRequest searchRequest = new SearchRequest(account.getEsindex());
+        SearchRequest searchRequest = new SearchRequest(account.getEsIndex());
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         for (Map.Entry<String, String> e : queryMap.entrySet()) {

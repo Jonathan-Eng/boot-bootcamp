@@ -1,5 +1,6 @@
 package jettyjersey;
 
+import api.CreateAccountRequest;
 import mybatis.mappers.AccountMapper;
 import pattern.PatternValidator;
 import pattern.PatternedStringGenerator;
@@ -14,7 +15,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 
 @Path("/")
 public class CreateAccountResource {
@@ -30,8 +30,8 @@ public class CreateAccountResource {
     @Path("create-account")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createAccount(CreateAccountBody createAccountBody) {
-        String accountName = createAccountBody.getAccountName();
+    public Response createAccount(CreateAccountRequest createAccountRequest) {
+        String accountName = createAccountRequest.getAccountName();
 
         if(!PatternValidator.isNameValid(accountName)) return AccountResponses.invalidAccountName(accountName);
 
@@ -40,9 +40,9 @@ public class CreateAccountResource {
         }
 
         String token = PatternedStringGenerator.generateToken();
-        String esindex = PatternedStringGenerator.generateEsindex();
+        String esIndex = PatternedStringGenerator.generateEsIndex();
 
-        Account account = new Account(accountName, token, esindex);
+        Account account = new Account(accountName, token, esIndex);
         accountMapper.insert(account);
 
         Account accountWithId = accountMapper.getAccountByToken(token);

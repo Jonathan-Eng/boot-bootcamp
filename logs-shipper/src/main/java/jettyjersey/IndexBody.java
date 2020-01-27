@@ -5,6 +5,7 @@ public class IndexBody {
 
 
     public IndexBody() {}
+    public IndexBody(String message) {this.message = message;}
     public String getMessage() {
         return message;
     }

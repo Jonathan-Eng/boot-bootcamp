@@ -34,7 +34,7 @@ public class GetAccountResource {
     public Response getAccountByToken(@PathParam(AccountGlobals.ACCOUNT_TOKEN) String accountToken){
         if (!PatternValidator.isTokenValid(accountToken)) return AccountResponses.invalidTokenResponse(accountToken);
         Account account = accountMapper.getAccountByToken(accountToken);
-        if (account == null) return AccountResponses.unauthorizedTokenResponse(accountToken);   //  TODO change from unauthorized to not found
+        if (account == null) return AccountResponses.unauthorizedTokenResponse(accountToken);
         return AccountResponses.tokenOkResponse(account);
     }
 }
