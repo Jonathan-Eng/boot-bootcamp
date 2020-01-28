@@ -1,13 +1,29 @@
 version: '3'
 
 services:
+
+  mysql_db:
+    image: mysql:5.6.34
+    volumes:
+      - ./db/initdb.sql:/docker-entrypoint-initdb.d/dump.sql
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: "accountsdb"
+      MYSQL_USER: "jonathan"
+      MYSQL_PASSWORD: "engel"
+      MYSQL_ROOT_PASSWORD: "engel"
+
   bootcampservice:
     build: ./logs-shipper
     deploy:
       replicas: ${REPLICAS}
     volumes:
+      - ./inf/build/resources/main/log4j2.xml:/usr/bootcamp/resources/main/log4j2.xml
       - ./inf/build/resources/main/elasticsearch.config:/usr/bootcamp/resources/main/elasticsearch.config
       - ./inf/build/resources/main/server.config:/usr/bootcamp/resources/main/server.config
+      - ./accounts-service/client/build/resources/main/accounts-service-api.config:/usr/bootcamp/resources/main/accounts-service-api.config
 
   load-balancer-service:
     image: haproxy:latest
@@ -51,6 +67,21 @@ services:
   indexer:
     build: ./indexer
     volumes:
+      - ./inf/build/resources/main/log4j2.xml:/usr/bootcamp/resources/main/log4j2.xml
       - ./inf/build/resources/main/elasticsearch.config:/usr/bootcamp/resources/main/elasticsearch.config
       - ./inf/build/resources/main/server.config:/usr/bootcamp/resources/main/server.config
+      - ./accounts-service/client/build/resources/main/accounts-service-api.config:/usr/bootcamp/resources/main/accounts-service-api.config
+    ports:
+      - "5200:5200"
+
+  # ACCOUNTS SERVICE
+  accounts-service:
+    build: ./accounts-service
+    volumes:
+      - ./inf/build/resources/main/log4j2.xml:/usr/bootcamp/resources/main/log4j2.xml
+      - ./inf/build/resources/main/server.config:/usr/bootcamp/resources/main/server.config
+      - ./accounts-service/build/resources/main/mybatis/mybatis.config:/usr/bootcamp/resources/main/mybatis/mybatis.config
+    ports:
+      - "8888:8000"
+      - "5116:5200"
 

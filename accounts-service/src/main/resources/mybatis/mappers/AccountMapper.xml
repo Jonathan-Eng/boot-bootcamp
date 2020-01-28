@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "mybatis.mappers.AccountMapper">
+    <insert id = "insert" parameterType = "pojos.Account">
+        INSERT INTO accounts (name, token, esindex )
+        VALUES (#{name}, #{token}, #{esIndex} );
+    </insert>
+    <select id="getAccountByName" resultType="pojos.Account">
+        SELECT * FROM accounts
+        WHERE name=#{name}
+    </select>
+    <select id="getAccountByToken" resultType="pojos.Account">
+        SELECT * FROM accounts
+        WHERE token=#{token}
+    </select>
+    <select id="getAccountByEsindex" resultType="pojos.Account">
+        SELECT * FROM accounts
+        WHERE esindex=#{esIndex}
+    </select>
+</mapper>

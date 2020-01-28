@@ -9,9 +9,12 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/accounts-service" />
+            <option value="$PROJECT_DIR$/accounts-service/client" />
             <option value="$PROJECT_DIR$/indexer" />
             <option value="$PROJECT_DIR$/inf" />
             <option value="$PROJECT_DIR$/logs-shipper" />
+            <option value="$PROJECT_DIR$/logs-shipper/client" />
           </set>
         </option>
         <option name="useQualifiedModuleNames" value="true" />

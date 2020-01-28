@@ -35,9 +35,14 @@ dependencies {
     // for testing
     testCompile 'junit:junit:4.12'
 
-    // optimize wait. allows setting max {time, condition} to wait for event.
-    testCompile 'org.awaitility:awaitility:4.0.1'
 
+
+    //compile accounts client
+    compile project(':accounts-service:client')
+    testCompile project(':accounts-service:client')
+
+    // compile logs-shipper client
+    testCompile project(':logs-shipper:client')
 }
 
 

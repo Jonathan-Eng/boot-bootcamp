@@ -14,6 +14,7 @@ public class LogsShipperModule extends AbstractModule {
         install(new ServerModule());
         install(new ElasticsearchClientModule());
         install(new ProducerModule());
+        install(new AccountsServiceApiModule());
     }
 
     @Provides
